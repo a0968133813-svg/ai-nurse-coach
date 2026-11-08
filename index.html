@@ -1,1 +1,166 @@
 
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Nurse Coach 2.0</title>
+<style>
+*{box-sizing:border-box}
+body{
+ margin:0;background:#f3f6fb;color:#23334a;
+ font-family:Arial,"Microsoft JhengHei",sans-serif;
+}
+header{
+ background:#173b68;color:white;padding:23px 6%;
+ display:flex;justify-content:space-between;align-items:center;
+}
+header h1{font-size:23px;margin:0}
+header p{margin:6px 0 0;color:#c8d9ef;font-size:13px}
+main{max-width:1150px;margin:30px auto;padding:0 20px}
+.welcome{margin-bottom:24px}
+.welcome h2{margin-bottom:5px}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:17px}
+.card{
+ background:white;border-radius:14px;padding:21px;
+ box-shadow:0 3px 15px #1a365510;
+}
+.card h3{margin-top:0;font-size:16px}
+.number{font-size:30px;font-weight:bold;color:#2467a5}
+.muted{color:#78879b;font-size:13px}
+.progress{
+ height:9px;background:#e8edf4;border-radius:10px;overflow:hidden;
+ margin:12px 0;
+}
+.bar{height:100%;background:#359c83;border-radius:10px}
+.section{margin-top:26px}
+.skills{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.skill{
+ padding:15px;background:#f7f9fc;border-radius:10px;
+}
+.skill strong{display:block;margin-bottom:9px}
+.task{display:flex;gap:10px;padding:12px 0;border-bottom:1px solid #edf0f5}
+.task input{width:18px;height:18px}
+button{
+ border:0;border-radius:9px;background:#2168a5;
+ color:white;padding:12px 18px;cursor:pointer;
+}
+button:hover{background:#174e80}
+.ai{
+ background:#eaf3fc;border:1px solid #d3e4f7;
+ padding:22px;border-radius:14px;
+}
+footer{text-align:center;padding:30px;color:#8995a5;font-size:12px}
+@media(max-width:750px){
+ .grid,.skills{grid-template-columns:1fr}
+ header{padding:20px;flex-direction:column;align-items:flex-start;gap:8px}
+}
+</style>
+</head>
+<body>
+
+<header>
+ <div>
+  <h1>✚ AI Nurse Coach 2.0</h1>
+  <p>AI 智慧新人護理師培訓與臨床能力成長平台</p>
+ </div>
+ <div>護理教育訓練系統</div>
+</header>
+
+<main>
+ <div class="welcome">
+  <h2>新人護理師學習儀表板</h2>
+  <p class="muted">歡迎使用 AI Nurse Coach，開始你的臨床能力成長之旅。</p>
+ </div>
+
+ <div class="grid">
+  <div class="card">
+   <h3>學習任務完成率</h3>
+   <div class="number" id="rate">0%</div>
+   <div class="progress"><div class="bar" id="rateBar" style="width:0%"></div></div>
+   <span class="muted">依照已完成任務計算</span>
+  </div>
+  <div class="card">
+   <h3>已完成訓練任務</h3>
+   <div class="number" id="done">0</div>
+   <span class="muted">項學習任務</span>
+  </div>
+  <div class="card">
+   <h3>訓練任務總數</h3>
+   <div class="number" id="total">5</div>
+   <span class="muted">新人基礎訓練</span>
+  </div>
+ </div>
+
+ <div class="section card">
+  <h3>六大臨床能力指標</h3>
+  <p class="muted">以下為展示用初始範例，並非實際能力評核結果。</p>
+  <div class="skills">
+   <div class="skill"><strong>基本護理技術</strong>待評估</div>
+   <div class="skill"><strong>病情評估能力</strong>待評估</div>
+   <div class="skill"><strong>給藥安全</strong>待評估</div>
+   <div class="skill"><strong>臨床判斷能力</strong>待評估</div>
+   <div class="skill"><strong>溝通與團隊合作</strong>待評估</div>
+   <div class="skill"><strong>緊急應變能力</strong>待評估</div>
+  </div>
+ </div>
+
+ <div class="section card">
+  <h3>新人今日訓練任務</h3>
+  <p class="muted">勾選完成的項目，系統會在此瀏覽器自動保存。</p>
+  <div id="tasks">
+   <label class="task"><input type="checkbox"> 熟悉病人安全與辨識原則</label>
+   <label class="task"><input type="checkbox"> 生命徵象評估與異常辨識</label>
+   <label class="task"><input type="checkbox"> 給藥安全與三讀五對</label>
+   <label class="task"><input type="checkbox"> SBAR 臨床溝通練習</label>
+   <label class="task"><input type="checkbox"> 緊急狀況通報流程</label>
+  </div>
+  <p class="muted" id="saveStatus">資料尚未更新</p>
+ </div>
+
+ <div class="section ai">
+  <h3>🧠 AI 臨床情境教練</h3>
+  <p>透過模擬臨床案例，練習病情評估、臨床判斷及緊急應變能力。</p>
+  <button onclick="alert('AI 情境教練模組將於下一階段建置。')">
+   開始 AI 情境訓練
+  </button>
+ </div>
+</main>
+
+<footer>
+ AI Nurse Coach 2.0｜護理教育創新展示系統<br>
+ 教育模擬用途，非實際臨床決策系統
+</footer>
+
+<script>
+const boxes = [...document.querySelectorAll('#tasks input')];
+const key = 'nurseCoachTasks';
+
+function update(){
+ const done = boxes.filter(b=>b.checked).length;
+ const rate = Math.round(done / boxes.length * 100);
+ document.getElementById('done').textContent = done;
+ document.getElementById('rate').textContent = rate + '%';
+ document.getElementById('rateBar').style.width = rate + '%';
+ document.getElementById('total').textContent = boxes.length;
+}
+
+function save(){
+ localStorage.setItem(key,JSON.stringify(boxes.map(b=>b.checked)));
+ update();
+ document.getElementById('saveStatus').textContent =
+ '✓ 已自動保存於目前瀏覽器';
+}
+
+try {
+ const saved = JSON.parse(localStorage.getItem(key) || '[]');
+ boxes.forEach((b,i)=>b.checked = saved[i] === true);
+} catch(e) {
+ console.log('讀取保存資料失敗');
+}
+
+boxes.forEach(b=>b.addEventListener('change',save));
+update();
+</script>
+</body>
+</html>
